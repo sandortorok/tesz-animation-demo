@@ -1,59 +1,248 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="hu">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Testveri Szovetseg</title>
+  <title>Testvéri Szövetség – Isten népének megújulásáért</title>
+  <meta name="description" content="A Testvéri Szövetség egy felekezetközi keresztyén közösség, amely az Ige tiszta hirdetését és a testvéri közösség ápolását szolgálja." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-frame-count="122">
-  <header class="topbar">
-    <div class="brand">Testveri Szovetseg</div>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-inner">
+      <span class="loader-brand">Testvéri Szövetség</span>
+      <div class="loader-progress">
+        <div id="loader-bar"></div>
+      </div>
+      <span id="loader-percent">0%</span>
+    </div>
+  </div>
+
+  <!-- Fixed Header -->
+  <header class="site-header" id="site-header">
     <nav>
-      <a href="#kuldetes">Kuldetes</a>
-      <a href="#kozosseg">Kozosseg</a>
-      <a href="#esemenyek">Esemenyek</a>
-      <a href="#kapcsolat">Kapcsolat</a>
+      <a href="#" class="header-logo">TeSz</a>
+      <div class="header-links">
+        <a href="#rolunk">Rólunk</a>
+        <a href="#esemenyek">Események</a>
+        <a href="#hangtar">Hangtár</a>
+        <a href="#kapcsolat">Kapcsolat</a>
+      </div>
     </nav>
   </header>
 
-  <canvas id="canvas" aria-hidden="true"></canvas>
-  <main id="scroll-track" aria-hidden="true"></main>
+  <!-- ============================================
+       PART 1: Video Hero (fixed canvas + scroll track)
+       ============================================ -->
 
-  <section class="hero-copy">
-    <p class="eyebrow">Hit. Kozosseg. Szolgalat.</p>
-    <h1>Egysegben epul a kozosseg</h1>
-    <p class="lead">Gorgess le, es nezd meg a tortenetet. A kepi mozgas es a tartalom egyutt vezeti vegig a latogatot.</p>
-  </section>
+  <!-- Hero overlay text — fixed on top of canvas -->
+  <div class="hero-overlay" id="hero-overlay">
+    <h1 class="hero-title">
+      <span class="hero-word">Testvéri</span>
+      <span class="hero-word hero-word--accent">Szövetség</span>
+    </h1>
+    <p class="hero-sub">Isten népének megújulásáért</p>
+  </div>
 
-  <section id="kuldetes" class="content-card left" data-enter="0.15" data-leave="0.34">
-    <p class="eyebrow">Kuldetes</p>
-    <h2>Remeny, ami osszekot</h2>
-    <p>A Testveri Szovetseg celja, hogy hitben es szeretetben tamogassa az embereket a hetkoznapokban.</p>
-  </section>
+  <!-- Canvas (fixed behind everything) -->
+  <div class="canvas-wrap" id="canvas-wrap">
+    <canvas id="canvas" aria-hidden="true"></canvas>
+  </div>
 
-  <section id="kozosseg" class="content-card right" data-enter="0.35" data-leave="0.52">
-    <p class="eyebrow">Kozosseg</p>
-    <h2>Kapcsolodas, ami felemel</h2>
-    <p>Imaalkalmak, csoportok es csaladi programok teremtenek befogado kozosseget minden korosztalynak.</p>
-  </section>
+  <!-- Scroll track — this drives the video playback -->
+  <div id="scroll-track"></div>
 
-  <section id="esemenyek" class="content-card left" data-enter="0.53" data-leave="0.72">
-    <p class="eyebrow">Esemenyek</p>
-    <h2>Talalkozas szemelyesen</h2>
-    <p>Heti alkalmak es kozossegi napok, ahol megerositjuk a kapcsolatokat es a hitbeli utat.</p>
-  </section>
+  <!-- ============================================
+       PART 2: Normal website content (below video)
+       ============================================ -->
+  <main id="main-content">
 
-  <section id="kapcsolat" class="content-card right" data-enter="0.73" data-leave="1.0" data-persist="true">
-    <p class="eyebrow">Kapcsolat</p>
-    <h2>Csatlakozz hozzank</h2>
-    <p>Irj nekunk, es segitunk megtalalni a hozzad legkozelebb allo alkalmat.</p>
-    <a class="cta" href="mailto:info@testveriszovetseg.hu">Kapcsolatfelvetel</a>
-  </section>
+    <!-- Rólunk -->
+    <section id="rolunk" class="content-section">
+      <div class="section-container">
+        <div class="section-badge">Rólunk</div>
+        <h2 class="section-title">Mi a Testvéri Szövetség?</h2>
+        <p class="section-text">
+          A Testvéri Szövetség (TeSz) egy felekezetközi keresztyén mozgalom, amely az 
+          evangéliumi hit és a testvéri szeretet jegyében szolgál. Célunk Isten népének 
+          megújulása az Ige tiszta hirdetése, a testvéri közösség ápolása és a hitben 
+          való növekedés által.
+        </p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📖</div>
+            <h3>Ige hirdetése</h3>
+            <p>A Biblia tanításainak tiszta, hűséges hirdetése</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3>Testvéri közösség</h3>
+            <p>Felekezeteken átívelő egység Krisztusban</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">❤️</div>
+            <h3>Megújulás</h3>
+            <p>A hívő élet folyamatos elmélyülése</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🌍</div>
+            <h3>Misszió</h3>
+            <p>Helyi és határon túli missziós szolgálat</p>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-num" data-target="30">0</span><span class="stat-plus">+</span>
+            <span class="stat-lbl">év szolgálat</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num" data-target="100">0</span><span class="stat-plus">+</span>
+            <span class="stat-lbl">hanganyag</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num" data-target="2">0</span>
+            <span class="stat-lbl">csendesnap/év</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- Idézet -->
+    <section class="content-section quote-section">
+      <div class="section-container">
+        <blockquote class="big-quote">
+          „Ímé, mily jó és mily gyönyörűséges, amikor együtt lakoznak az atyafiak!"
+        </blockquote>
+        <cite class="quote-cite">— Zsoltárok 133:1</cite>
+      </div>
+    </section>
+
+    <!-- Események -->
+    <section id="esemenyek" class="content-section section-dark">
+      <div class="section-container">
+        <div class="section-badge">Események</div>
+        <h2 class="section-title">Események & Táborok</h2>
+        <p class="section-text">Közelgő alkalmaink – csatlakozz közösségünkhöz!</p>
+        <div class="events-grid">
+          <a href="https://tesz.net/?p=11477" target="_blank" rel="noopener" class="event-card">
+            <div class="event-date"><span class="event-day">18</span><span class="event-month">ÁPR</span></div>
+            <div class="event-info">
+              <span class="event-type type-csendesnap">csendesnap</span>
+              <h3>Női csendesnap 2026</h3>
+              <p>Miskolci Baptista Gyülekezet</p>
+            </div>
+          </a>
+          <a href="https://tesz.net/?p=11466" target="_blank" rel="noopener" class="event-card">
+            <div class="event-date"><span class="event-day">—</span><span class="event-month">NYÁR</span></div>
+            <div class="event-info">
+              <span class="event-type type-tabor">tábor</span>
+              <h3>IFI 1 tábor 2026</h3>
+              <p>Pányoki tábor</p>
+            </div>
+          </a>
+          <a href="https://tesz.net/esemenyek/" target="_blank" rel="noopener" class="event-card">
+            <div class="event-date"><span class="event-day">—</span><span class="event-month">OKT</span></div>
+            <div class="event-info">
+              <span class="event-type type-csendesnap">csendesnap</span>
+              <h3>Őszi csendesnap 2026</h3>
+              <p>Helyszín egyeztetés alatt</p>
+            </div>
+          </a>
+        </div>
+        <a href="https://tesz.net/esemenyek/" target="_blank" rel="noopener" class="btn-link">
+          Teljes eseménynaptár →
+        </a>
+      </div>
+    </section>
+
+    <!-- Hangtár -->
+    <section id="hangtar" class="content-section">
+      <div class="section-container">
+        <div class="section-badge">Hangtár</div>
+        <h2 class="section-title">Az Ige hangja</h2>
+        <p class="section-text">Hallgasd meg csendesnapjaink és táboraink igehirdetéseit</p>
+        <div class="speakers-grid">
+          <a href="https://tesz.net/hangtar/" target="_blank" rel="noopener" class="speaker-card" style="--clr:#c8942a">
+            <span class="speaker-initial">G</span>
+            <span class="speaker-name">Gál Lajos</span>
+          </a>
+          <a href="https://tesz.net/hangtar/" target="_blank" rel="noopener" class="speaker-card" style="--clr:#2a3f6b">
+            <span class="speaker-initial">F</span>
+            <span class="speaker-name">Frank Róbert</span>
+          </a>
+          <a href="https://tesz.net/hangtar/" target="_blank" rel="noopener" class="speaker-card" style="--clr:#7b2d3f">
+            <span class="speaker-initial">B</span>
+            <span class="speaker-name">Bohus András</span>
+          </a>
+          <a href="https://tesz.net/hangtar/" target="_blank" rel="noopener" class="speaker-card" style="--clr:#047857">
+            <span class="speaker-initial">F</span>
+            <span class="speaker-name">id. Frank Sándor</span>
+          </a>
+          <a href="https://tesz.net/hangtar/" target="_blank" rel="noopener" class="speaker-card" style="--clr:#92400e">
+            <span class="speaker-initial">E</span>
+            <span class="speaker-name">Elek Sándor</span>
+          </a>
+        </div>
+        <a href="https://tesz.net/hangtar/" target="_blank" rel="noopener" class="btn-link">
+          Teljes hangtár →
+        </a>
+      </div>
+    </section>
+
+    <!-- Támogatás + Kapcsolat -->
+    <section id="kapcsolat" class="content-section section-dark">
+      <div class="section-container">
+        <div class="section-badge">Kapcsolat</div>
+        <h2 class="section-title">Csatlakozz hozzánk</h2>
+        <p class="section-text">
+          Az adományok teljes mértékben a közösség szolgálatát, a táborok, csendesnapok 
+          szervezését és a kiadványok megjelentetését fedezik.
+        </p>
+        <div class="cta-row">
+          <a href="https://tesz.net/adomanyozas/" target="_blank" rel="noopener" class="cta-btn">❤ Adományozás</a>
+          <a href="mailto:info@tesz.net" class="cta-btn cta-btn--outline">Kapcsolatfelvétel</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="section-container footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">✝ Testvéri Szövetség</span>
+          <p>Testvéri Szövetség Közhasznú Egyesület</p>
+          <p>Adószám: 18468830-1-04</p>
+        </div>
+        <div class="footer-col">
+          <h4>Linkek</h4>
+          <a href="https://tesz.net/" target="_blank" rel="noopener">Főoldal</a>
+          <a href="https://tesz.net/esemenyek/" target="_blank" rel="noopener">Események</a>
+          <a href="https://tesz.net/hangtar/" target="_blank" rel="noopener">Hangtár</a>
+          <a href="https://tesz.net/category/hir/" target="_blank" rel="noopener">Hírek</a>
+        </div>
+        <div class="footer-col">
+          <h4>Elérhetőség</h4>
+          <p>5520 Szeghalom, Táncsics M. u. 18/1</p>
+          <a href="mailto:info@tesz.net">info@tesz.net</a>
+          <a href="https://tesz.net" target="_blank" rel="noopener">www.tesz.net</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Testvéri Szövetség Közhasznú Egyesület</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- CDN Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
