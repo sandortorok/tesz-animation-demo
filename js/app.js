@@ -150,19 +150,22 @@
   }
 
   /* ============================================================
-     SCROLL → VIDEO + HERO FADE + CANVAS FADE
+     SCROLL → VIDEO + PINNING
      ============================================================ */
   function initScrollVideo() {
-    // Frame playback driven by scroll
+    var videoSection = document.getElementById("video-section");
+
+    // Frame playback driven by scroll using pinning
     ScrollTrigger.create({
-      trigger: scrollTrack,
+      trigger: videoSection,
       start: "top top",
-      end: "bottom bottom",
+      end: "+=200%", // wait 2 screens while scrubbing the video
+      pin: true,
       scrub: true,
       onUpdate: function (self) {
         var p = self.progress;
 
-        // Frame index (play all frames evenly across the entire scroll track)
+        // Frame index (play all frames evenly across the pinned duration)
         var frameProgress = p;
         var index = Math.min(Math.floor(frameProgress * FRAME_COUNT), FRAME_COUNT - 1);
         if (index !== currentFrame) {
@@ -170,8 +173,8 @@
           requestAnimationFrame(function () { drawFrame(currentFrame); });
         }
 
-        // Hero text fades out quickly
-        var heroOpacity = Math.max(0, 1 - p * 3);
+        // Hero text fades out quickly in the first 30% of scroll
+        var heroOpacity = Math.max(0, 1 - p * 3.3);
         heroOverlay.style.opacity = heroOpacity;
         if (heroOpacity <= 0) {
           heroOverlay.style.visibility = "hidden";
@@ -179,8 +182,8 @@
           heroOverlay.style.visibility = "visible";
         }
 
-        // Header style: dark during video, light after
-        if (p > 0.6) {
+        // Header style: light backgrounds when scrolling past video
+        if (p > 0.8) {
           header.classList.add("scrolled-past");
         } else {
           header.classList.remove("scrolled-past");
