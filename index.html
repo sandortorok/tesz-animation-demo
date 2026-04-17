@@ -37,25 +37,21 @@
   </header>
 
   <!-- ============================================
-       PART 1: Video Hero (fixed canvas + scroll track)
+       PART 1: Video Hero (pinned on scroll)
        ============================================ -->
+  <section id="video-section" class="video-section">
+    <!-- Hero overlay text -->
+    <div class="hero-overlay" id="hero-overlay">
+      <h1 class="hero-title">
+        <span class="hero-word">Testvéri</span>
+        <span class="hero-word hero-word--accent">Szövetség</span>
+      </h1>
+      <p class="hero-sub">Isten népének megújulásáért</p>
+    </div>
 
-  <!-- Hero overlay text — fixed on top of canvas -->
-  <div class="hero-overlay" id="hero-overlay">
-    <h1 class="hero-title">
-      <span class="hero-word">Testvéri</span>
-      <span class="hero-word hero-word--accent">Szövetség</span>
-    </h1>
-    <p class="hero-sub">Isten népének megújulásáért</p>
-  </div>
-
-  <!-- Canvas (fixed behind everything) -->
-  <div class="canvas-wrap" id="canvas-wrap">
+    <!-- Canvas -->
     <canvas id="canvas" aria-hidden="true"></canvas>
-  </div>
-
-  <!-- Scroll track — this drives the video playback -->
-  <div id="scroll-track"></div>
+  </section>
 
   <!-- ============================================
        PART 2: Normal website content (below video)

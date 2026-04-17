@@ -23,7 +23,7 @@
   /* State */
   const frames = new Array(FRAME_COUNT);
   let currentFrame = -1;
-  let bgColor = "#0e0d0b";
+  let bgColor = "#ffffff";
 
   /* ============================================================
      CANVAS
@@ -162,16 +162,16 @@
       onUpdate: function (self) {
         var p = self.progress;
 
-        // Frame index (play all frames across 0-80% of scroll)
-        var frameProgress = Math.min(p / 0.8, 1);
+        // Frame index (play all frames evenly across the entire scroll track)
+        var frameProgress = p;
         var index = Math.min(Math.floor(frameProgress * FRAME_COUNT), FRAME_COUNT - 1);
         if (index !== currentFrame) {
           currentFrame = index;
           requestAnimationFrame(function () { drawFrame(currentFrame); });
         }
 
-        // Hero text fades out in first 15% of scroll
-        var heroOpacity = Math.max(0, 1 - p * 6.5);
+        // Hero text fades out quickly
+        var heroOpacity = Math.max(0, 1 - p * 3);
         heroOverlay.style.opacity = heroOpacity;
         if (heroOpacity <= 0) {
           heroOverlay.style.visibility = "hidden";
@@ -179,17 +179,8 @@
           heroOverlay.style.visibility = "visible";
         }
 
-        // Canvas fades out in last 20% of scroll track
-        var canvasFade = p < 0.8 ? 1 : Math.max(0, 1 - (p - 0.8) / 0.2);
-        canvasWrap.style.opacity = canvasFade;
-        if (canvasFade <= 0) {
-          canvasWrap.style.visibility = "hidden";
-        } else {
-          canvasWrap.style.visibility = "visible";
-        }
-
         // Header style: dark during video, light after
-        if (p > 0.85) {
+        if (p > 0.6) {
           header.classList.add("scrolled-past");
         } else {
           header.classList.remove("scrolled-past");
