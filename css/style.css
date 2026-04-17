@@ -1,9 +1,24 @@
-﻿html,
+﻿:root {
+  --bg: #f6f3ed;
+  --text: #1f1b16;
+  --muted: #6b6256;
+  --card: rgba(14, 14, 14, 0.54);
+  --card-border: rgba(255, 255, 255, 0.24);
+  --card-text: #f6f2ea;
+  --accent: #2da9a7;
+  --accent-2: #67d3d0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
   margin: 0;
-  width: 100%;
-  min-height: 100%;
-  background: #f6f3ed;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
 }
 
 body {
@@ -13,11 +28,156 @@ body {
 #canvas {
   position: fixed;
   inset: 0;
-  display: block;
   width: 100vw;
   height: 100vh;
+  display: block;
+  z-index: 1;
 }
 
 #scroll-track {
-  height: 500vh;
+  height: 520vh;
+}
+
+.topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 68px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.2rem;
+  backdrop-filter: blur(6px);
+  background: rgba(246, 243, 237, 0.78);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.brand {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.topbar nav a {
+  text-decoration: none;
+  color: #3f382f;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.hero-copy {
+  position: fixed;
+  top: 92px;
+  left: 1rem;
+  right: 1rem;
+  z-index: 12;
+  max-width: 860px;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(2.6rem, 7.6vw, 7.4rem);
+  line-height: 0.92;
+}
+
+.hero-copy .lead {
+  margin-top: 1rem;
+  max-width: 620px;
+  color: #4c453b;
+  line-height: 1.6;
+  font-size: clamp(0.98rem, 1.6vw, 1.15rem);
+}
+
+.content-card {
+  position: fixed;
+  z-index: 14;
+  bottom: 7vh;
+  width: min(92vw, 420px);
+  padding: 1rem 1rem 1.1rem;
+  border-radius: 18px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--card-text);
+  backdrop-filter: blur(7px);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+
+.content-card.left {
+  left: 1rem;
+}
+
+.content-card.right {
+  right: 1rem;
+}
+
+.content-card.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.content-card h2 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+  line-height: 1;
+}
+
+.content-card p {
+  margin: 0.75rem 0 0;
+  line-height: 1.58;
+}
+
+.content-card .eyebrow {
+  color: #d8d2c8;
+}
+
+.cta {
+  margin-top: 1rem;
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  padding: 0.68rem 1.05rem;
+  border-radius: 999px;
+  pointer-events: auto;
+}
+
+@media (max-width: 860px) {
+  .topbar nav {
+    display: none;
+  }
+
+  .hero-copy {
+    top: 84px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2.3rem, 11vw, 4.3rem);
+  }
+
+  .content-card {
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+  }
 }

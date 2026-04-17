@@ -2,6 +2,9 @@
 const CANVAS = document.getElementById("canvas");
 const CTX = CANVAS.getContext("2d", { alpha: false });
 
+const cards = [...document.querySelectorAll(".content-card")];
+const heroCopy = document.querySelector(".hero-copy");
+
 const frames = new Array(FRAME_COUNT);
 let currentFrame = 0;
 let bgColor = "#f6f3ed";
@@ -19,6 +22,20 @@ function resizeCanvas() {
   drawFrame(currentFrame);
 }
 
+function frameUrl(n) {
+  return `frames/frame_${String(n).padStart(4, "0")}.webp`;
+}
+
+function loadImage(n) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = frameUrl(n);
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+  });
+}
+
 function sampleBgColor(img) {
   const mini = document.createElement("canvas");
   mini.width = 8;
@@ -32,11 +49,7 @@ function sampleBgColor(img) {
     mctx.getImageData(7, 7, 1, 1).data
   ];
 
-  const avg = corners.reduce(
-    (acc, c) => [acc[0] + c[0], acc[1] + c[1], acc[2] + c[2]],
-    [0, 0, 0]
-  );
-
+  const avg = corners.reduce((acc, c) => [acc[0] + c[0], acc[1] + c[1], acc[2] + c[2]], [0, 0, 0]);
   return `rgb(${Math.round(avg[0] / 4)}, ${Math.round(avg[1] / 4)}, ${Math.round(avg[2] / 4)})`;
 }
 
@@ -64,48 +77,49 @@ function drawFrame(index) {
   CTX.drawImage(img, dx, dy, dw, dh);
 }
 
-function frameUrl(n) {
-  return `frames/frame_${String(n).padStart(4, "0")}.webp`;
-}
-
-function loadImage(n) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.decoding = "async";
-    img.loading = "eager";
-    img.src = frameUrl(n);
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-  });
-}
-
 async function preloadFrames() {
   const jobs = [];
   for (let i = 1; i <= FRAME_COUNT; i += 1) {
-    jobs.push(
-      loadImage(i).then((img) => {
-        frames[i - 1] = img;
-      })
-    );
+    jobs.push(loadImage(i).then((img) => {
+      frames[i - 1] = img;
+    }));
   }
-
   await Promise.all(jobs);
   drawFrame(0);
 }
 
-function getScrollProgress() {
+function getProgress() {
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
   if (maxScroll <= 0) return 0;
   return Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
 }
 
+function updateCards(progress) {
+  cards.forEach((card) => {
+    const enter = Number(card.dataset.enter || 0);
+    const leave = Number(card.dataset.leave || 1);
+    const persist = card.dataset.persist === "true";
+    const active = progress >= enter && progress <= leave;
+
+    if (active || (persist && progress > leave)) {
+      card.classList.add("active");
+    } else {
+      card.classList.remove("active");
+    }
+  });
+
+  const heroFade = Math.max(0, 1 - progress * 2.4);
+  heroCopy.style.opacity = String(heroFade);
+}
+
 function renderFromScroll() {
-  const progress = getScrollProgress();
+  const progress = getProgress();
   const nextFrame = Math.min(Math.floor(progress * (FRAME_COUNT - 1)), FRAME_COUNT - 1);
   if (nextFrame !== currentFrame) {
     currentFrame = nextFrame;
     drawFrame(currentFrame);
   }
+  updateCards(progress);
 }
 
 async function init() {

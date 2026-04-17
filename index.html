@@ -3,12 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Testveri Szovetseg | Hero Animation</title>
+  <title>Testveri Szovetseg</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-frame-count="122">
-  <canvas id="canvas" aria-label="Hero animation"></canvas>
+  <header class="topbar">
+    <div class="brand">Testveri Szovetseg</div>
+    <nav>
+      <a href="#kuldetes">Kuldetes</a>
+      <a href="#kozosseg">Kozosseg</a>
+      <a href="#esemenyek">Esemenyek</a>
+      <a href="#kapcsolat">Kapcsolat</a>
+    </nav>
+  </header>
+
+  <canvas id="canvas" aria-hidden="true"></canvas>
   <main id="scroll-track" aria-hidden="true"></main>
+
+  <section class="hero-copy">
+    <p class="eyebrow">Hit. Kozosseg. Szolgalat.</p>
+    <h1>Egysegben epul a kozosseg</h1>
+    <p class="lead">Gorgess le, es nezd meg a tortenetet. A kepi mozgas es a tartalom egyutt vezeti vegig a latogatot.</p>
+  </section>
+
+  <section id="kuldetes" class="content-card left" data-enter="0.15" data-leave="0.34">
+    <p class="eyebrow">Kuldetes</p>
+    <h2>Remeny, ami osszekot</h2>
+    <p>A Testveri Szovetseg celja, hogy hitben es szeretetben tamogassa az embereket a hetkoznapokban.</p>
+  </section>
+
+  <section id="kozosseg" class="content-card right" data-enter="0.35" data-leave="0.52">
+    <p class="eyebrow">Kozosseg</p>
+    <h2>Kapcsolodas, ami felemel</h2>
+    <p>Imaalkalmak, csoportok es csaladi programok teremtenek befogado kozosseget minden korosztalynak.</p>
+  </section>
+
+  <section id="esemenyek" class="content-card left" data-enter="0.53" data-leave="0.72">
+    <p class="eyebrow">Esemenyek</p>
+    <h2>Talalkozas szemelyesen</h2>
+    <p>Heti alkalmak es kozossegi napok, ahol megerositjuk a kapcsolatokat es a hitbeli utat.</p>
+  </section>
+
+  <section id="kapcsolat" class="content-card right" data-enter="0.73" data-leave="1.0" data-persist="true">
+    <p class="eyebrow">Kapcsolat</p>
+    <h2>Csatlakozz hozzank</h2>
+    <p>Irj nekunk, es segitunk megtalalni a hozzad legkozelebb allo alkalmat.</p>
+    <a class="cta" href="mailto:info@testveriszovetseg.hu">Kapcsolatfelvetel</a>
+  </section>
+
   <script src="js/app.js"></script>
 </body>
 </html>
