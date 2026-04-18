@@ -6,17 +6,14 @@
   "use strict";
 
   const FRAME_COUNT = parseInt(document.body.dataset.frameCount || "122", 10);
-  const IMAGE_SCALE = 0.86;
 
   /* DOM */
   const loader = document.getElementById("loader");
   const loaderBar = document.getElementById("loader-bar");
   const loaderPercent = document.getElementById("loader-percent");
   const heroOverlay = document.getElementById("hero-overlay");
-  const canvasWrap = document.getElementById("canvas-wrap");
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d", { alpha: false });
-  const scrollTrack = document.getElementById("scroll-track");
   const mainContent = document.getElementById("main-content");
   const header = document.getElementById("site-header");
 
@@ -25,11 +22,16 @@
   let currentFrame = -1;
   let bgColor = "#ffffff";
 
+  /* Detect mobile */
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
   /* ============================================================
-     CANVAS
+     CANVAS — always covers the viewport (like object-fit:cover)
      ============================================================ */
   function resizeCanvas() {
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap at 2x for performance
     const w = window.innerWidth;
     const h = window.innerHeight;
     canvas.width = Math.round(w * dpr);
@@ -79,7 +81,9 @@
 
     var cw = window.innerWidth, ch = window.innerHeight;
     var iw = img.naturalWidth, ih = img.naturalHeight;
-    var scale = Math.max(cw / iw, ch / ih) * IMAGE_SCALE;
+
+    // Always cover the viewport — on mobile portrait this zooms in to fill height
+    var scale = Math.max(cw / iw, ch / ih);
     var dw = iw * scale, dh = ih * scale;
     var dx = (cw - dw) / 2, dy = (ch - dh) / 2;
 
@@ -100,7 +104,7 @@
       loaderPercent.textContent = pct + "%";
     }
 
-    // Phase 1: first 10
+    // Phase 1: first 10 frames for fast initial paint
     var p1 = [];
     for (var i = 1; i <= Math.min(10, FRAME_COUNT); i++) {
       (function (idx) {
@@ -111,7 +115,7 @@
     currentFrame = 0;
     drawFrame(0);
 
-    // Phase 2: rest
+    // Phase 2: remaining frames
     var p2 = [];
     for (var j = 11; j <= FRAME_COUNT; j++) {
       (function (idx) {
@@ -129,6 +133,7 @@
       duration: 1.2,
       easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
       smoothWheel: true,
+      smoothTouch: false, // native touch scrolling on mobile
     });
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
@@ -151,38 +156,37 @@
 
   /* ============================================================
      SCROLL → VIDEO + PINNING
+     The video-section is pinned at the top while the user scrolls
+     through +=200% (2 extra viewport heights). Frames play across
+     the full duration. When done, the section un-pins and scrolls
+     away naturally, revealing main-content below.
      ============================================================ */
   function initScrollVideo() {
     var videoSection = document.getElementById("video-section");
+    var pinDuration = isMobile() ? "+=150%" : "+=200%";
 
-    // Frame playback driven by scroll using pinning
     ScrollTrigger.create({
       trigger: videoSection,
       start: "top top",
-      end: "+=200%", // wait 2 screens while scrubbing the video
+      end: pinDuration,
       pin: true,
       scrub: true,
       onUpdate: function (self) {
         var p = self.progress;
 
-        // Frame index (play all frames evenly across the pinned duration)
-        var frameProgress = p;
-        var index = Math.min(Math.floor(frameProgress * FRAME_COUNT), FRAME_COUNT - 1);
+        // Frame index
+        var index = Math.min(Math.floor(p * FRAME_COUNT), FRAME_COUNT - 1);
         if (index !== currentFrame) {
           currentFrame = index;
           requestAnimationFrame(function () { drawFrame(currentFrame); });
         }
 
-        // Hero text fades out quickly in the first 30% of scroll
+        // Hero text fades out in the first 30%
         var heroOpacity = Math.max(0, 1 - p * 3.3);
         heroOverlay.style.opacity = heroOpacity;
-        if (heroOpacity <= 0) {
-          heroOverlay.style.visibility = "hidden";
-        } else {
-          heroOverlay.style.visibility = "visible";
-        }
+        heroOverlay.style.visibility = heroOpacity <= 0 ? "hidden" : "visible";
 
-        // Header style: light backgrounds when scrolling past video
+        // Header transitions to light style
         if (p > 0.8) {
           header.classList.add("scrolled-past");
         } else {
@@ -196,7 +200,6 @@
      CONTENT SECTION REVEAL ANIMATIONS
      ============================================================ */
   function initContentAnimations() {
-    // Reveal elements with IntersectionObserver + GSAP
     var revealEls = mainContent.querySelectorAll(
       ".section-badge, .section-title, .section-text, .features-grid, .stats-row, .events-grid, .speakers-grid, .cta-row, .big-quote, .quote-cite"
     );
@@ -214,10 +217,9 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+    }, { threshold: 0.1, rootMargin: "0px 0px -30px 0px" });
 
-    revealEls.forEach(function (el, i) {
-      // Small stagger within each section
+    revealEls.forEach(function (el) {
       var section = el.closest(".content-section, .quote-section");
       if (section) {
         var siblings = Array.from(section.querySelectorAll(
@@ -258,13 +260,53 @@
   }
 
   /* ============================================================
+     MOBILE MENU TOGGLE
+     ============================================================ */
+  function initMobileMenu() {
+    var toggle = document.getElementById("menu-toggle");
+    var links = document.querySelector(".header-links");
+    if (!toggle || !links) return;
+
+    toggle.addEventListener("click", function () {
+      links.classList.toggle("open");
+      toggle.classList.toggle("active");
+    });
+
+    // Close menu when a link is clicked
+    links.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", function () {
+        links.classList.remove("open");
+        toggle.classList.remove("active");
+      });
+    });
+  }
+
+  /* ============================================================
+     HANDLE RESIZE — recalculate canvas + ScrollTrigger
+     ============================================================ */
+  var resizeTimer;
+  function handleResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      resizeCanvas();
+      ScrollTrigger.refresh();
+    }, 200);
+  }
+
+  /* ============================================================
      INIT
      ============================================================ */
   async function init() {
     gsap.registerPlugin(ScrollTrigger);
 
     resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", function () {
+      setTimeout(function () {
+        resizeCanvas();
+        ScrollTrigger.refresh();
+      }, 300);
+    });
 
     await preloadFrames();
     loader.classList.add("loaded");
@@ -274,6 +316,7 @@
     initScrollVideo();
     initContentAnimations();
     initCounters();
+    initMobileMenu();
   }
 
   init();
