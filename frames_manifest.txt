@@ -1,0 +1,4 @@
+Frame sequence manifest
+Total frames: 170
+open-bible-upscaled: 1-97 (97 frames)
+zoom-to-bible-upscaled: 98-170 (73 frames)
